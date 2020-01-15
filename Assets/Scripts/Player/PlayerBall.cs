@@ -10,6 +10,7 @@ public class PlayerBall : MonoBehaviour
     bool isDead = false;
     PlaySFX playSFX;
     GameManager gameManager;
+    // 0 - brickHit, 1 - paddleHit
 
     void Start()
     {
@@ -35,7 +36,7 @@ public class PlayerBall : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Brick"))
         {
-            playSFX.PlayAudioSFX();
+            playSFX.PlayAudioSFX(0);
             BrickStats brickStats = collision.transform.GetComponent<BrickStats>();
             if (brickStats != null)
             {
@@ -46,6 +47,7 @@ public class PlayerBall : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
+            playSFX.PlayAudioSFX(1);
             PlayerMovement playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
             print("Collide with Player!!");
             print(rb.velocity);
@@ -55,16 +57,27 @@ public class PlayerBall : MonoBehaviour
                 if (playerMovement.horizontalMovement >= 0.5f)
                 {
                     rb.AddForce(Vector3.right * 75f);
-                    rb.AddForce(Vector3.up * 105f);
+
+                    if (rb.velocity.y < 22)
+                    {
+                        rb.AddForce(Vector3.up * 105f);
+                    }
                 }
                 else if (playerMovement.horizontalMovement <= -0.5f)
                 {
                     rb.AddForce(Vector3.right * -75f);
-                    rb.AddForce(Vector3.up * 105f);
+
+                    if (rb.velocity.y < 22)
+                    {
+                        rb.AddForce(Vector3.up * 105f);
+                    }
                 }
                 else if (playerMovement.horizontalMovement == 0f)
                 {
-                    rb.AddForce(Vector3.up * 100f);
+                    if (rb.velocity.y < 22)
+                    {
+                        rb.AddForce(Vector3.up * 125f);
+                    }
                 }
             }
 
@@ -72,6 +85,7 @@ public class PlayerBall : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Death"))
         {
+            gameManager.SubtractLife();
             resetBallInstructions.SetActive(true);
             isDead = true;
             ResetBall();
