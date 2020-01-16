@@ -7,19 +7,21 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("General References")]
-    public GameObject defaultBrick;
     public int playerScore;
     public int brickID;
     public int playerLives = 4;
 
     public bool isPaused = false;
 
-    [Header("Material References")]
+    [Header("Material and brick References")]
     public Material[] brickMaterials;
+    public GameObject defaultBrick;
+    public int brickCount = 0;
 
     [Header("UI References")]
     public GameObject playerLife;
     public GameObject gameOverText;
+    public GameObject youWinText;
     public TextMeshProUGUI scoreText;
     public List<GameObject> playerLifeIcons = new List<GameObject>();
     public GameObject pauseMenu;
@@ -67,6 +69,7 @@ public class GameManager : MonoBehaviour
             brickID = i + 1;
             for (int s = 0; s < 14; s++)
             {
+                brickCount += 1;
                 Vector3 currentPos = new Vector3(x, y, 10);
                 SpawnBrick(currentPos, brickMaterials[i], brickID);
                 x += 1.75f;
@@ -108,8 +111,10 @@ public class GameManager : MonoBehaviour
             }
             
         }
+
     }
 
+ 
     public void SetupPlayerLives(int amount)
     {
         for (int i = 0; i < playerLives; i++)
@@ -140,6 +145,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddLife()
+    {
+        playerLives += 1;
+        GameObject playerLifeOBJ = Instantiate(playerLife, null) as GameObject;
+        Vector3 playerLifePos = new Vector3(playerLives - 1 + 0.65f, 6.25f, 10f);
+        playerLifeOBJ.transform.SetPositionAndRotation(playerLifePos, Quaternion.identity);
+        playerLifeIcons.Add(playerLifeOBJ as GameObject);
+    }
+
     public void GameOver()
     {
         isGameOver = true;
@@ -163,6 +177,37 @@ public class GameManager : MonoBehaviour
     {
         print("Quit game!!");
         Application.Quit();
+    }
+
+    public void RemoveBrick()
+    {
+        brickCount -= 1;
+        if (brickCount <= 0)
+        {
+            WinLevel();
+        }
+    }
+
+    public void WinLevel()
+    {
+        isGameOver = true;
+        Time.timeScale = 0;
+
+        if (youWinText != null)
+        {
+            youWinText.SetActive(true);
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        for (int i = 0; i < playerLives; i++)
+        {
+            Destroy(playerLifeIcons[i].gameObject);
+        }
+
+
+        playerLifeIcons.Clear();
     }
 
 }

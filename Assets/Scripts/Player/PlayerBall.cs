@@ -28,6 +28,7 @@ public class PlayerBall : MonoBehaviour
                 resetBallInstructions.SetActive(false);
                 isDead = false;
                 rb.isKinematic = false;
+                rb.useGravity = true;
             }
         }
     }
@@ -79,6 +80,11 @@ public class PlayerBall : MonoBehaviour
                         rb.AddForce(Vector3.up * 125f);
                     }
                 }
+            }
+
+            if (rb.useGravity)
+            {
+                rb.useGravity = false;
             }
 
         }
