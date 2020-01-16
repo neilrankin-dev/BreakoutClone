@@ -34,6 +34,16 @@ public class GameManager : MonoBehaviour
     {
         SetupBricks();
         SetupPlayerLives(playerLives);
+
+        PauseGame();
+    }
+
+    private void Reset()
+    {
+        brickCount = 0;
+        SetupBricks();
+        playerLives = 4;
+        SetupPlayerLives(playerLives);
     }
 
     private void Update()
@@ -44,7 +54,10 @@ public class GameManager : MonoBehaviour
             {
                 gameOverText.SetActive(false);
                 Time.timeScale = 1;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                PlayerBall playerBall = FindObjectOfType<PlayerBall>();
+                Rigidbody playerBallRB = playerBall.GetComponent<Rigidbody>();
+
+                SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
             }
 
         }
