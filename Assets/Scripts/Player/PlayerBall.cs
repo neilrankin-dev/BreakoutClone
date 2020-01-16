@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerBall : MonoBehaviour
 {
     public GameObject resetBallInstructions;
+    public float maxVelocity = 18f;
 
     Rigidbody rb;
     bool isDead = false;
@@ -20,7 +21,9 @@ public class PlayerBall : MonoBehaviour
     }
 
     private void Update()
-    {
+    {      
+
+       // print(rb.velocity);
         if (isDead)
         {
             if (Input.GetKeyDown(KeyCode.E))
@@ -31,6 +34,7 @@ public class PlayerBall : MonoBehaviour
                 rb.useGravity = true;
             }
         }
+
     }
 
     void OnCollisionEnter(Collision collision)
@@ -42,6 +46,7 @@ public class PlayerBall : MonoBehaviour
             if (brickStats != null)
             {
                 gameManager.AddScore(brickStats.brickScoreValue);
+                brickStats.DestroyBrick();
             }
             Destroy(collision.gameObject, 0.1f);           
         }
@@ -50,8 +55,8 @@ public class PlayerBall : MonoBehaviour
         {
             playSFX.PlayAudioSFX(1);
             PlayerMovement playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
-            print("Collide with Player!!");
-            print(rb.velocity);
+            //print("Collide with Player!!");
+
 
             if (playerMovement != null)
             {
@@ -59,7 +64,7 @@ public class PlayerBall : MonoBehaviour
                 {
                     rb.AddForce(Vector3.right * 75f);
 
-                    if (rb.velocity.y < 22)
+                    if (rb.velocity.y < maxVelocity)
                     {
                         rb.AddForce(Vector3.up * 105f);
                     }
@@ -68,14 +73,14 @@ public class PlayerBall : MonoBehaviour
                 {
                     rb.AddForce(Vector3.right * -75f);
 
-                    if (rb.velocity.y < 22)
+                    if (rb.velocity.y < maxVelocity)
                     {
                         rb.AddForce(Vector3.up * 105f);
                     }
                 }
                 else if (playerMovement.horizontalMovement == 0f)
                 {
-                    if (rb.velocity.y < 22)
+                    if (rb.velocity.y < maxVelocity)
                     {
                         rb.AddForce(Vector3.up * 125f);
                     }

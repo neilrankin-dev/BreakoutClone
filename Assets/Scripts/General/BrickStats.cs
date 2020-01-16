@@ -13,7 +13,7 @@ public class BrickStats : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
     }
 
-    private void OnDestroy()
+    public void DestroyBrick()
     {
         ExtraLifeChance();
         gameManager.RemoveBrick();
@@ -21,7 +21,7 @@ public class BrickStats : MonoBehaviour
 
     void ExtraLifeChance()
     {
-        int chance = Random.Range(0, 20);
+        int chance = Random.Range(0, 35);
         if (chance == 1)
         {
             gameManager.AddLife();
