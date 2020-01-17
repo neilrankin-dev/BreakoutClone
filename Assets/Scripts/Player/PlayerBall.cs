@@ -41,12 +41,14 @@ public class PlayerBall : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Brick"))
         {
+            rb.AddForce(Vector3.down * 100f);
             playSFX.PlayAudioSFX(0);
             BrickStats brickStats = collision.transform.GetComponent<BrickStats>();
             if (brickStats != null)
             {
                 gameManager.AddScore(brickStats.brickScoreValue);
                 brickStats.DestroyBrick();
+                
             }
             Destroy(collision.gameObject, 0.1f);           
         }

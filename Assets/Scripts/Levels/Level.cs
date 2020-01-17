@@ -7,4 +7,5 @@ public class Level : ScriptableObject
 {
     public string levelName;
     public Material levelBG;
+    public AudioClip levelMusic;
 }

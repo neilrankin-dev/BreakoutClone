@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Brick
   - Death
+  - Music
+  - SFX
   layers:
   - Default
   - TransparentFX

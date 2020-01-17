@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("General References")]
-    public int playerScore;
+    public static int playerScore;
     public int brickID;
     public int playerLives = 4;
 
@@ -18,6 +18,11 @@ public class GameManager : MonoBehaviour
     public GameObject defaultBrick;
     public int brickCount = 0;
 
+    [Header("Powerup Material References")]
+    public Material extraLifeMaterial;
+    public GameObject powerupBrick;
+    
+
     [Header("UI References")]
     public GameObject playerLife;
     public GameObject gameOverText;
@@ -27,12 +32,15 @@ public class GameManager : MonoBehaviour
     public GameObject pauseMenu;
 
     private bool isGameOver = false;
- 
-  
+
+    void Awake()
+    {
+        SetupBricks();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        SetupBricks();
         SetupPlayerLives(playerLives);
 
         PauseGame();
@@ -42,7 +50,7 @@ public class GameManager : MonoBehaviour
     {
         brickCount = 0;
         SetupBricks();
-        playerLives = 4;
+        playerLives = 5;
         SetupPlayerLives(playerLives);
     }
 
@@ -56,7 +64,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1;
                 PlayerBall playerBall = FindObjectOfType<PlayerBall>();
                 Rigidbody playerBallRB = playerBall.GetComponent<Rigidbody>();
-
+                playerScore = 0;
                 SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
             }
 
