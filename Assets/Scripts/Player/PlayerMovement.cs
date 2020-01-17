@@ -10,13 +10,9 @@ public class PlayerMovement : MonoBehaviour
     public float leftScreenEdge =  -0.75f;
     public float rightScreenEdge = 23f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private bool isSprint = false;
 
-    // Update is called once per frame
+
     void Update()
     {
         horizontalMovement = (Input.GetAxis("Horizontal"));
@@ -33,6 +29,18 @@ public class PlayerMovement : MonoBehaviour
             transform.position = new Vector3(rightScreenEdge, transform.position.y, transform.position.z);
         }
 
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isSprint = true;
+            movementSpeed = 35;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            isSprint = false;
+            movementSpeed = 20;
+        }
 
     }
 }

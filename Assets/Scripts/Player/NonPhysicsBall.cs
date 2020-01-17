@@ -5,24 +5,23 @@ using UnityEngine;
 
 public class NonPhysicsBall : MonoBehaviour
 {
-    private Rigidbody rb;
-
+    [Header("General References")]
     public GameObject resetBallInstructions;
     public float maxVelocity = 18f;
 
-    bool isDead = false;
-    PlaySFX playSFX;
-    GameManager gameManager;
-    // 0 - brickHit, 1 - paddleHit
-
+    private Rigidbody rb;
+    private bool isDead = false;
+    private GameManager gameManager;
+    private PlaySFX playSFX;
+    private bool isSprint = false;
  
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.AddForce(Vector3.down * 500);
-        playSFX = FindObjectOfType<PlaySFX>();
         gameManager = FindObjectOfType<GameManager>();
+        playSFX = FindObjectOfType<PlaySFX>();
     }
 
     // Update is called once per frame
@@ -38,20 +37,20 @@ public class NonPhysicsBall : MonoBehaviour
                 rb.AddForce(Vector3.down * 500);
             }
         }
+
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Brick"))
         {
-            rb.AddForce(Vector3.down * 100f);
-            playSFX.PlayAudioSFX(0);
+            
             BrickStats brickStats = collision.transform.GetComponent<BrickStats>();
             if (brickStats != null)
             {
                 gameManager.AddScore(brickStats.brickScoreValue);
                 brickStats.DestroyBrick();
-
+                playSFX.PlayAudioSFX(PlaySFX.Sound_HitBrick);
             }
             Destroy(collision.gameObject, 0.1f);
         }
@@ -71,10 +70,49 @@ public class NonPhysicsBall : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            rb.AddForce(Vector3.up * 150);
-            playSFX.PlayAudioSFX(1);
+            PlayerMovement playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
+            rb.AddForce(Vector3.up * 200);
+            playSFX.PlayAudioSFX(PlaySFX.Sound_HitPaddle);
+
+            if (playerMovement != null)
+            {
+                if (playerMovement.horizontalMovement >= 0.5f)
+                {
+                    rb.AddForce(Vector3.right * 75f);
+
+                    if (rb.velocity.y < maxVelocity)
+                    {
+                        rb.AddForce(Vector3.up * 105f);
+                    }
+                }
+                else if (playerMovement.horizontalMovement <= -0.5f)
+                {
+                    rb.AddForce(Vector3.right * -75f);
+
+                    if (rb.velocity.y < maxVelocity)
+                    {
+                        rb.AddForce(Vector3.up * 105f);
+                    }
+                }
+                else if (playerMovement.horizontalMovement == 0f)
+                {
+                    if (rb.velocity.y < maxVelocity)
+                    {
+                        rb.AddForce(Vector3.up * 125f);
+                    }
+                }
+            }
         }
     
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            rb.AddForce(Vector3.up * 250);
+            playSFX.PlayAudioSFX(1);
+        }
     }
 
     private void ResetBall()

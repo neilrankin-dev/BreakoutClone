@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class PlaySFX : MonoBehaviour
 {
+
+
     AudioSource audioSource;
 
     public AudioClip[] hitSounds;  // 0 - brickHit, 1 - paddleHit
+
+    public const int Sound_HitBrick = 0;
+    public const int Sound_HitPaddle = 1;
 
 
     private void Start()
