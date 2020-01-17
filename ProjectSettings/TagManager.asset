@@ -8,6 +8,7 @@ TagManager:
   - Death
   - Music
   - SFX
+  - SideWall
   layers:
   - Default
   - TransparentFX
